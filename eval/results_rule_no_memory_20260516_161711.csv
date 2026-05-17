@@ -1,0 +1,16 @@
+scenario,variant,repeat,orchestrator_triggered,action_type,latency_ms,memory_refs_count,narrative_len,error
+S1_session_start,rule_no_memory,1,False,,0,0,0,name '_post_event' is not defined
+S1_session_start,rule_no_memory,2,False,,0,0,0,name '_post_event' is not defined
+S1_session_start,rule_no_memory,3,False,,0,0,0,name '_post_event' is not defined
+S2_mistake_streak,rule_no_memory,1,False,,0,0,0,name '_post_event' is not defined
+S2_mistake_streak,rule_no_memory,2,False,,0,0,0,name '_post_event' is not defined
+S2_mistake_streak,rule_no_memory,3,False,,0,0,0,name '_post_event' is not defined
+S3_task_done,rule_no_memory,1,False,,0,0,0,name '_post_event' is not defined
+S3_task_done,rule_no_memory,2,False,,0,0,0,name '_post_event' is not defined
+S3_task_done,rule_no_memory,3,False,,0,0,0,name '_post_event' is not defined
+S4_low_engage,rule_no_memory,1,False,,0,0,0,name '_post_event' is not defined
+S4_low_engage,rule_no_memory,2,False,,0,0,0,name '_post_event' is not defined
+S4_low_engage,rule_no_memory,3,False,,0,0,0,name '_post_event' is not defined
+S5_mixed_answers,rule_no_memory,1,False,,0,0,0,name '_post_event' is not defined
+S5_mixed_answers,rule_no_memory,2,False,,0,0,0,name '_post_event' is not defined
+S5_mixed_answers,rule_no_memory,3,False,,0,0,0,name '_post_event' is not defined

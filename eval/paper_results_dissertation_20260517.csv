@@ -1,0 +1,2 @@
+scenario,paper_questions,db_count,generated_count,generate_ms,answer_ok,queue_ready,error
+P1_generate_paper_cold_start,10,4,6,36900.0,true,false,

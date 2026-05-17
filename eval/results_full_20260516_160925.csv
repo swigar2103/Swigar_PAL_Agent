@@ -1,0 +1,50 @@
+scenario,variant,repeat,orchestrator_triggered,action_type,latency_ms,memory_refs_count,narrative_len,error
+S1_session_start,full,1,False,,0,0,0,timed out
+S1_session_start,full,2,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S1_session_start,full,3,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S1_session_start,full,4,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S1_session_start,full,5,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S2_mistake_streak,full,1,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S2_mistake_streak,full,2,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S2_mistake_streak,full,3,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S2_mistake_streak,full,4,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S2_mistake_streak,full,5,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S3_task_done,full,1,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S3_task_done,full,2,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S3_task_done,full,3,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S3_task_done,full,4,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S3_task_done,full,5,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S4_low_engage,full,1,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S4_low_engage,full,2,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S4_low_engage,full,3,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S4_low_engage,full,4,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S4_low_engage,full,5,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S5_mixed_answers,full,1,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S5_mixed_answers,full,2,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S5_mixed_answers,full,3,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S5_mixed_answers,full,4,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+S5_mixed_answers,full,5,False,,0,0,0,"Client error '400 Bad Request' for url 'http://127.0.0.1:8000/v1/events'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"

@@ -7,7 +7,7 @@ Usage:
   uvicorn swigar_api.main:app --port 8000   # terminal 1
   python scripts/eval_dissertation.py         # terminal 2
 
-Outputs CSV + PNG under reference_file/eval/
+Outputs CSV + PNG under eval/
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from pathlib import Path
 import httpx
 
 _REPO = Path(__file__).resolve().parents[1]
-_EVAL_DB = _REPO / "reference_file" / "eval" / "eval_swigar.db"
+_EVAL_DB = _REPO / "eval" / "eval_swigar.db"
 # Force eval SQLite: repository .env may point at remote Postgres and hang init_db.
 os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{_EVAL_DB.as_posix()}"
 os.environ["SWIGAR_QUESTION_BANK_SOURCE"] = "builtin"
@@ -44,7 +44,7 @@ def _apply_eval_env() -> None:
 API_BASE = os.environ.get("SWIGAR_EVAL_API", "http://127.0.0.1:8000").rstrip("/")
 EVAL_MODE = os.environ.get("SWIGAR_EVAL_MODE", "local")  # local | http
 REPEATS = int(os.environ.get("SWIGAR_EVAL_REPEATS", "5"))
-OUT_DIR = _REPO / "reference_file" / "eval"
+OUT_DIR = _REPO / "eval"
 VALID_ACTIONS = {
     "assign_task",
     "npc_dialogue",
