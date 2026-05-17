@@ -1,0 +1,27 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://swigar:swigar@db:5432/swigar
+      CORS_ORIGINS: "http://localhost:5173,http://127.0.0.1:5173"
+    depends_on:
+      - db
+    volumes:
+      - swigar_data:/root/.swigar
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: swigar
+      POSTGRES_PASSWORD: swigar
+      POSTGRES_DB: swigar
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+  swigar_data:

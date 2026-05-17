@@ -1,0 +1,28 @@
+[project]
+name = "swigar-api"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "swigar-core",
+    "swigar-memory",
+    "swigar-events",
+    "swigar-orchestrator",
+    "swigar-skills",
+    "swigar-tools",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "aiosqlite>=0.20.0",
+]
+
+[project.scripts]
+swigar-api = "swigar_api.main:run"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["swigar_api*"]

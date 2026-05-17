@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 本地专用，不上传 GitHub
+.env
+reference_file/
+mempalace-reference/
+*.db
+.swigar/
+node_modules/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
