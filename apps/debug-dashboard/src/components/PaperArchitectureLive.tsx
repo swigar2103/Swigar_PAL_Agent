@@ -11,8 +11,21 @@ import {
   PAPER_MODULES,
   PAPER_NODE_POSITIONS,
   type ModuleActivity,
+  type PaperLayerId,
   type PaperModuleId,
 } from "../data/paperModules";
+import { useLanguage } from "../i18n/LanguageContext";
+import type { MessageKey } from "../i18n/messages";
+
+const PAPER_LAYER_KEYS: Record<PaperLayerId, MessageKey> = {
+  ingress: "paperLayer.ingress",
+  control: "paperLayer.control",
+  generation: "paperLayer.generation",
+  infra: "paperLayer.infra",
+  delivery: "paperLayer.delivery",
+  answer: "paperLayer.answer",
+  adapt: "paperLayer.adapt",
+};
 
 type Props = {
   activeModule: PaperModuleId | null;
@@ -47,23 +60,31 @@ function StatusDot({ state }: { state: ModuleActivity["state"] }) {
   return <span className={`paper-arch-status paper-arch-status-${state}`} aria-hidden />;
 }
 
-function ArchLegend({ connected, apiOnline }: { connected?: boolean; apiOnline?: boolean }) {
+function ArchLegend({
+  connected,
+  apiOnline,
+  t,
+}: {
+  connected?: boolean;
+  apiOnline?: boolean;
+  t: (key: MessageKey) => string;
+}) {
   return (
-    <ul className="paper-arch-legend" aria-label="图例">
+    <ul className="paper-arch-legend" aria-label={t("paperArch.legendAria")}>
       <li>
-        <span className="paper-arch-status paper-arch-status-active" /> 当前
+        <span className="paper-arch-status paper-arch-status-active" /> {t("paperArch.legend.active")}
       </li>
       <li>
-        <span className="paper-arch-status paper-arch-status-warm" /> 近期
+        <span className="paper-arch-status paper-arch-status-warm" /> {t("paperArch.legend.warm")}
       </li>
       <li>
-        <span className="paper-arch-status paper-arch-status-seen" /> 已触发
+        <span className="paper-arch-status paper-arch-status-seen" /> {t("paperArch.legend.seen")}
       </li>
       <li>
-        <span className="paper-arch-status paper-arch-status-cold" /> 未触发
+        <span className="paper-arch-status paper-arch-status-cold" /> {t("paperArch.legend.cold")}
       </li>
-      {!apiOnline && <li className="paper-arch-legend-warn">API 未启动（8000）</li>}
-      {apiOnline && !connected && <li className="paper-arch-legend-warn">trace 重连中</li>}
+      {!apiOnline && <li className="paper-arch-legend-warn">{t("paperArch.apiOff")}</li>}
+      {apiOnline && !connected && <li className="paper-arch-legend-warn">{t("paperArch.traceReconnect")}</li>}
     </ul>
   );
 }
@@ -78,6 +99,7 @@ export function PaperArchitectureLive({
   assembling,
   traces = [],
 }: Props) {
+  const { locale, t } = useLanguage();
   const idleModule: PaperModuleId | null =
     connected && !activeModule
       ? assembling
@@ -113,19 +135,22 @@ export function PaperArchitectureLive({
       .slice(0, 4)
       .map((t) => ({
         step: t.step,
-        mod: getPaperModule(t.paperModuleId!)?.name ?? t.paperModuleId,
+        mod:
+          (locale === "en"
+            ? getPaperModule(t.paperModuleId!)?.nameEn
+            : getPaperModule(t.paperModuleId!)?.name) ?? t.paperModuleId,
         ts: t.ts,
       }));
-  }, [traces]);
+  }, [traces, locale]);
 
   return (
     <section
       className={`paper-arch-live${assembling ? " paper-arch-live-assembling" : ""}`}
-      aria-label="PAL Paper 架构实时图"
+      aria-label={t("paperArch.aria")}
     >
       <div className="paper-arch-head">
-        <h4 className="paper-arch-title">PAL Paper-Agent 拓扑</h4>
-        <ArchLegend connected={connected} apiOnline={apiOnline} />
+        <h4 className="paper-arch-title">{t("paperArch.title")}</h4>
+        <ArchLegend connected={connected} apiOnline={apiOnline} t={t} />
       </div>
       <div
         className="paper-arch-pipeline"
@@ -134,7 +159,7 @@ export function PaperArchitectureLive({
         aria-valuemax={pipeline.length}
       >
         <span className="paper-arch-pipeline-label">
-          组卷流水线 {pipelineDone}/{pipeline.length}
+          {t("paperArch.pipeline")} {pipelineDone}/{pipeline.length}
         </span>
         <div className="paper-arch-pipeline-track">
           {pipeline.map((m) => {
@@ -178,7 +203,7 @@ export function PaperArchitectureLive({
                 fill={layer.tint}
               />
               <text x={20} y={layer.y + 16} className="paper-arch-layer-label-svg">
-                {layer.label}
+                {t(PAPER_LAYER_KEYS[layer.id])}
               </text>
             </g>
           ))}
@@ -213,7 +238,10 @@ export function PaperArchitectureLive({
           const isSelected = selected === mod.id;
           const leftPct = (pos.x / PAPER_GRAPH_SIZE.width) * 100;
           const topPct = (pos.y / PAPER_GRAPH_SIZE.height) * 100;
-          const tip = act.lastStep ? `${mod.description}\n最近: ${act.lastStep}` : mod.description;
+          const modLabel = locale === "en" ? mod.nameEn : mod.name;
+          const tip = act.lastStep
+            ? `${mod.description}\n${t("paperArch.recentColon")}${act.lastStep}`
+            : mod.description;
           return (
             <button
               key={mod.id}
@@ -231,11 +259,11 @@ export function PaperArchitectureLive({
                 } as CSSProperties
               }
               onClick={() => onSelect(mod.id)}
-              title={tip}
-            >
-              <StatusDot state={act.state} />
-              <GearIcon spinning={isActive} color={mod.color} />
-              <span className="paper-arch-node-name">{mod.name}</span>
+                title={tip}
+              >
+                <StatusDot state={act.state} />
+                <GearIcon spinning={isActive} color={mod.color} />
+                <span className="paper-arch-node-name">{modLabel}</span>
               {act.count > 0 ? <span className="paper-arch-node-count">{act.count}</span> : null}
             </button>
           );
@@ -243,7 +271,7 @@ export function PaperArchitectureLive({
       </div>
 
       {recentSteps.length > 0 ? (
-        <ul className="paper-arch-recent" aria-label="最近 trace">
+        <ul className="paper-arch-recent" aria-label={t("paperArch.recentAria")}>
           {recentSteps.map((r, i) => (
             <li key={`${r.ts}-${i}`}>
               <time>{r.ts}</time>
@@ -255,12 +283,8 @@ export function PaperArchitectureLive({
       ) : null}
 
       <p className="muted paper-arch-hint">
-        分层泳道展示编排路径；节点色点表示触发状态，数字为 trace 次数。
-        {!apiOnline
-          ? " 组卷/答题需先启动 API（.\\scripts\\run_api.ps1）。"
-          : !connected
-            ? " 实时高亮需 WebSocket；REST 组卷仍可用。"
-            : ""}
+        {t("paperArch.hint")}
+        {!apiOnline ? t("paperArch.hintApiOff") : !connected ? t("paperArch.hintWsOff") : ""}
       </p>
     </section>
   );

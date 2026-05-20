@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { getPaperModule, paperStepToModule, type PaperModuleId } from "../data/paperModules";
 import type { TraceItem } from "../hooks/useAgentSocket";
+import { useLanguage } from "../i18n/LanguageContext";
 
 type WorkflowItem = {
   category: string;
@@ -31,6 +32,7 @@ function extractLlmPayload(raw: unknown): { request?: unknown; response?: unknow
 }
 
 export function PaperModuleInspector({ moduleId, traces, workflowEvents }: Props) {
+  const { locale, t: tr } = useLanguage();
   const mod = moduleId ? getPaperModule(moduleId) : null;
 
   const moduleTraces = traces.filter((t) => {
@@ -53,7 +55,7 @@ export function PaperModuleInspector({ moduleId, traces, workflowEvents }: Props
   if (!mod) {
     return (
       <div className="paper-inspector paper-inspector-empty">
-        <p className="muted">点击架构图中的模块，查看实时输出与 LLM 调用</p>
+        <p className="muted">{tr("inspector.empty")}</p>
       </div>
     );
   }
@@ -63,18 +65,18 @@ export function PaperModuleInspector({ moduleId, traces, workflowEvents }: Props
       <div className="paper-inspector-head" style={{ background: `${mod.color}18` }}>
         <span className="paper-inspector-dot" style={{ background: mod.color }} />
         <div>
-          <h3>{mod.name}</h3>
-          <span className="muted">{mod.nameEn}</span>
+          <h3>{locale === "en" ? mod.nameEn : mod.name}</h3>
+          <span className="muted">{locale === "en" ? mod.name : mod.nameEn}</span>
         </div>
       </div>
       <p className="paper-inspector-desc">{mod.description}</p>
 
-      <h4>Trace / LLM</h4>
+      <h4>{tr("inspector.traceLlm")}</h4>
       {moduleTraces.length === 0 && moduleWf.length === 0 ? (
         <p className="muted">
           {mod.id === "orchestrator" || mod.id === "event_bus"
-            ? "系统在线；组卷或答题时此处将显示实时 trace。"
-            : "组卷或答题后，与此模块相关的 LLM / 工作流会出现在此处。"}
+            ? tr("inspector.waitingOrchestrator")
+            : tr("inspector.waitingModule")}
         </p>
       ) : (
         <ul className="paper-inspector-list">
@@ -82,28 +84,28 @@ export function PaperModuleInspector({ moduleId, traces, workflowEvents }: Props
             .slice()
             .reverse()
             .slice(0, 8)
-            .map((t) => {
-              const { request, response } = extractLlmPayload(t.raw);
+            .map((trace) => {
+              const { request, response } = extractLlmPayload(trace.raw);
               return (
-                <li key={t.id} className="paper-inspector-item">
+                <li key={trace.id} className="paper-inspector-item">
                   <header>
-                    <code>{t.step}</code>
-                    <time>{t.ts}</time>
+                    <code>{trace.step}</code>
+                    <time>{trace.ts}</time>
                   </header>
                   {request !== undefined && (
                     <details open>
-                      <summary>LLM 输入 (prompt / messages)</summary>
+                      <summary>{tr("inspector.llmIn")}</summary>
                       <pre>{JSON.stringify(request, null, 2)}</pre>
                     </details>
                   )}
                   {response !== undefined && (
                     <details>
-                      <summary>LLM 输出</summary>
+                      <summary>{tr("inspector.llmOut")}</summary>
                       <pre>{JSON.stringify(response, null, 2)}</pre>
                     </details>
                   )}
                   {request === undefined && response === undefined && (
-                    <pre className="paper-inspector-raw">{JSON.stringify(t.raw, null, 2)}</pre>
+                    <pre className="paper-inspector-raw">{JSON.stringify(trace.raw, null, 2)}</pre>
                   )}
                 </li>
               );

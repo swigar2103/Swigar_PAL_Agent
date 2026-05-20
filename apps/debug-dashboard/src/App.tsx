@@ -18,8 +18,10 @@ import {
   type GameUser,
 } from "./lib/gameAuth";
 import { getLearnerId, setLearnerId } from "./lib/learnerId";
+import { useLanguage } from "./i18n/LanguageContext";
 
 export default function App() {
+  const { t } = useLanguage();
   const [authUser, setAuthUser] = useState<GameUser | null>(() => getCurrentUser());
   const [learnerId, setLearnerIdState] = useState(() => getLearnerId());
   const [sessionId, setSessionId] = useState("s_demo");
@@ -158,11 +160,11 @@ export default function App() {
 
             <div className="demo-right">
               <div className="panel-card">
-                <h3>Agent 工作流 · 可读视图</h3>
+                <h3>{t("app.workflowReadable")}</h3>
                 <WorkflowTimeline traces={traces} llmConfigured={llmStatus?.llm_configured} />
               </div>
               <div className="panel-card panel-decision">
-                <h3>游戏 Impact · LearningDecision</h3>
+                <h3>{t("app.gameImpact")}</h3>
                 <DecisionPanel decision={decision} />
               </div>
             </div>
@@ -170,10 +172,10 @@ export default function App() {
         </section>
 
         <section className="section events-section">
-          <h2>事件与 API 响应</h2>
+          <h2>{t("app.events")}</h2>
           <div className="events-log">
             {events.length === 0 ? (
-              <p className="muted">暂无事件，请运行上方演示场景</p>
+              <p className="muted">{t("app.noEvents")}</p>
             ) : (
               events.map((e) => (
                 <details key={e.id} className="event-item">
@@ -189,8 +191,8 @@ export default function App() {
       </main>
 
       <footer className="site-footer">
-        <span>Swigar Agent Platform · Debug Showcase</span>
-        <span>API docs: /docs · WS: /debug/stream</span>
+        <span>{t("footer.platform")}</span>
+        <span>{t("footer.docs")}</span>
       </footer>
 
       {!authUser && <LoginOverlay onAuthenticated={handleAuthenticated} />}

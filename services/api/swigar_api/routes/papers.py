@@ -82,7 +82,7 @@ async def _generate_paper_isolated(
     orchestrator._trace_loop = main_loop
 
     async def _coro():
-        history_exclude_ids = kwargs.get("history_exclude_ids")
+        history_exclude_ids = kwargs.pop("history_exclude_ids", None)
         if method == "cold_start":
             return await orchestrator.generate_cold_start_paper(
                 learner_id,

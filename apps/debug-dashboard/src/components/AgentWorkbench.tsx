@@ -5,6 +5,7 @@ import { PaperArchitectureLive } from "./PaperArchitectureLive";
 import { PaperModuleInspector } from "./PaperModuleInspector";
 import type { TraceItem } from "../hooks/useAgentSocket";
 import type { PaperModuleId } from "../data/paperModules";
+import { useLanguage } from "../i18n/LanguageContext";
 
 type Props = {
   learnerId: string;
@@ -56,6 +57,7 @@ export function AgentWorkbench({
     submitting,
   } = usePaperWorkbench(learnerId);
 
+  const { t } = useLanguage();
   const [selected, setSelected] = useState("");
 
   const mergedLogs = useMemo(() => {
@@ -94,13 +96,10 @@ export function AgentWorkbench({
 
   return (
     <section className="workbench-section">
-      <h2 id="workbench">Agent 工作台</h2>
-      <p className="section-lead muted">
-        顺序答题 · 完成当前卷并交卷后，方可点击「开始下一卷」组卷 · 与 TacticalDuel 共用 Paper API（同一
-        learner_id 才同步进度）。
-      </p>
+      <h2 id="workbench">{t("workbench.title")}</h2>
+      <p className="section-lead muted">{t("workbench.lead")}</p>
       <p className="wb-learner-id muted" title={learnerId}>
-        当前 learner_id：<code>{learnerId}</code>
+        {t("workbench.learnerId")} <code>{learnerId}</code>
       </p>
 
       <div className="wb-toolbar">
@@ -111,27 +110,25 @@ export function AgentWorkbench({
           disabled={!canStartNextPaper}
           title={
             hasActivePaper
-              ? "请先完成当前试卷并点击「完成试卷」"
+              ? t("workbench.titleFinishFirst")
               : nextPaperQueued
-                ? "激活已预生成的下一卷"
-                : "组卷生成下一卷（约 1–3 分钟）"
+                ? t("workbench.titleActivateQueued")
+                : t("workbench.titleAssembleNext")
           }
         >
           {assembling
-            ? "组卷中…"
+            ? t("workbench.assembling")
             : !paper
-              ? "获取第一份试卷"
+              ? t("workbench.firstPaper")
               : nextPaperQueued
-                ? "开始下一卷（已备好）"
-                : "开始下一卷（组卷）"}
+                ? t("workbench.nextReady")
+                : t("workbench.nextAssemble")}
         </button>
         <button type="button" className="btn-ghost" onClick={() => void refresh()} disabled={loading}>
-          刷新
+          {t("workbench.refresh")}
         </button>
         {reserveCount > 0 && (
-          <span className="wb-hint muted">
-            Reserve 池 {reserveCount} 题（点「开始下一卷」时优先用于 hybrid 加速，无需等到更晚）
-          </span>
+          <span className="wb-hint muted">{t("workbench.reserveHint", { count: reserveCount })}</span>
         )}
         {hasActivePaper && assemblyHint && (
           <span className="wb-hint wb-hint-ok">
@@ -139,33 +136,31 @@ export function AgentWorkbench({
             {assemblyMode ? ` · ${assemblyMode}` : ""}
           </span>
         )}
-        {hasActivePaper && (
-          <span className="wb-hint muted">完成全部题目后点击「完成试卷」，即可解锁下一卷</span>
-        )}
+        {hasActivePaper && <span className="wb-hint muted">{t("workbench.unlockHint")}</span>}
         {error && <span className="wb-error">{error}</span>}
       </div>
 
       <div className="workbench-grid">
         <aside className="wb-col wb-profile panel-card">
-          <h3>学生画像</h3>
+          <h3>{t("workbench.profile")}</h3>
           {!profile ? (
-            <p className="muted">暂无画像数据</p>
+            <p className="muted">{t("workbench.noProfile")}</p>
           ) : (
             <ul className="profile-stats">
               <li>
-                <span>等级</span>
+                <span>{t("workbench.level")}</span>
                 <strong>Lv.{profile.current_level}</strong>
               </li>
               <li>
-                <span>偏好难度</span>
+                <span>{t("workbench.difficultyPref")}</span>
                 <strong>{profile.difficulty_preference}/5</strong>
               </li>
               <li>
-                <span>已完成试卷</span>
+                <span>{t("workbench.papersDone")}</span>
                 <strong>{profile.papers_completed}</strong>
               </li>
               <li>
-                <span>答题正确率</span>
+                <span>{t("workbench.accuracy")}</span>
                 <strong>{accuracy}%</strong>
               </li>
             </ul>
@@ -174,7 +169,9 @@ export function AgentWorkbench({
         </aside>
 
         <main className="wb-col wb-paper panel-card">
-          <h3>当前试卷 · {paper?.knowledge_point || (assembling ? "组卷中…" : "—")}</h3>
+          <h3>
+            {t("workbench.currentPaper")} · {paper?.knowledge_point || (assembling ? t("workbench.assembling") : "—")}
+          </h3>
 
           {(assembling || paper) && (
             <PaperArchitectureLive
@@ -192,12 +189,13 @@ export function AgentWorkbench({
           {paper && preview.length > 0 ? (
             <>
               <p className="muted">
-                {paper.strategy} · 进度 {Math.min(answeredCount, paper.total_questions)}/{paper.total_questions} ·{" "}
+                {paper.strategy} · {t("workbench.progress")}{" "}
+                {Math.min(answeredCount, paper.total_questions)}/{paper.total_questions} ·{" "}
                 {paper.status}
               </p>
               <p className="wb-rationale">{paper.rationale}</p>
 
-              <div className="paper-outline paper-outline-readonly" role="list" aria-label="答题进度">
+              <div className="paper-outline paper-outline-readonly" role="list" aria-label={t("workbench.outlineAria")}>
                 {preview.map((q) => {
                   const done = Boolean(q.answered);
                   const current = q.index === playIndex && paper.status === "active";
@@ -209,9 +207,9 @@ export function AgentWorkbench({
                       className={`paper-outline-item ${done ? (correct ? "done ok" : "done bad") : ""} ${current ? "active" : ""} ${q.index > playIndex && !done ? "locked" : ""}`}
                     >
                       <span className="paper-outline-num">#{q.index + 1}</span>
-                      {q.origin === "mistake_review" && <span className="badge-mistake">往期错题</span>}
-                      {q.origin === "carry_over" && <span className="badge-carry">未答结转</span>}
-                      <span className={`src src-${q.source}`}>{q.source === "database" ? "真题" : "AI"}</span>
+                      {q.origin === "mistake_review" && <span className="badge-mistake">{t("workbench.badge.mistake")}</span>}
+                      {q.origin === "carry_over" && <span className="badge-carry">{t("workbench.badge.carry")}</span>}
+                      <span className={`src src-${q.source}`}>{q.source === "database" ? t("workbench.source.db") : t("workbench.source.ai")}</span>
                       <span className="paper-outline-prompt">{q.prompt}</span>
                     </div>
                   );
@@ -221,10 +219,12 @@ export function AgentWorkbench({
               {activeQ && (
                 <div className="wb-quiz">
                   <div className="wb-quiz-header">
-                    {activeQ.origin === "mistake_review" && <span className="badge-mistake">往期错题</span>}
-                    {activeQ.origin === "carry_over" && <span className="badge-carry">未答结转</span>}
+                    {activeQ.origin === "mistake_review" && <span className="badge-mistake">{t("workbench.badge.mistake")}</span>}
+                    {activeQ.origin === "carry_over" && <span className="badge-carry">{t("workbench.badge.carry")}</span>}
                     <span className={`src src-${activeQ.source}`}>
-                      第 {playIndex + 1} 题 · {activeQ.source === "database" ? "真题" : "AI 变式"} · 难度 {activeQ.level}
+                      {t("workbench.questionN", { n: playIndex + 1 })} ·{" "}
+                      {activeQ.source === "database" ? t("workbench.source.db") : t("workbench.source.aiVariant")} ·{" "}
+                      {t("workbench.difficultyLevel")} {activeQ.level}
                     </span>
                   </div>
                   <p className="quiz-prompt">{activeQ.prompt}</p>
@@ -232,9 +232,12 @@ export function AgentWorkbench({
                   {activeQ.answered && activeQ.user_answer !== undefined ? (
                     <>
                       <div className={`wb-feedback ${activeQ.is_correct ? "ok" : "bad"}`}>
-                        <p>{activeQ.is_correct ? "回答正确" : "回答错误"}</p>
+                        <p>{activeQ.is_correct ? t("workbench.correct") : t("workbench.incorrect")}</p>
                         {!activeQ.is_correct && (lastFeedback?.correct_answer || activeQ.user_answer) && (
-                          <p>正确答案：{lastFeedback?.correct_answer || "见解析"}</p>
+                          <p>
+                            {t("workbench.correctAnswer")}
+                            {lastFeedback?.correct_answer || t("workbench.seeExplanation")}
+                          </p>
                         )}
                         {(activeQ.explanation || lastFeedback?.explanation) && (
                           <p className="wb-explanation">{activeQ.explanation || lastFeedback?.explanation}</p>
@@ -244,11 +247,11 @@ export function AgentWorkbench({
                         <div className="wb-next-row">
                           {showFinish ? (
                             <button type="button" className="btn-primary" onClick={() => void finishPaper()}>
-                              完成试卷
+                              {t("workbench.finishPaper")}
                             </button>
                           ) : (
                             <button type="button" className="btn-primary" onClick={goNext}>
-                              下一题
+                              {t("workbench.nextQuestion")}
                             </button>
                           )}
                         </div>
@@ -281,12 +284,17 @@ export function AgentWorkbench({
                           })();
                         }}
                       >
-                        {submitting ? "判题中…" : "提交答案"}
+                        {submitting ? t("workbench.submitting") : t("workbench.submit")}
                       </button>
                       {lastFeedback && lastFeedback.index === playIndex && (
                         <div className={`wb-feedback ${lastFeedback.is_correct ? "ok" : "bad"}`}>
-                          <p>{lastFeedback.is_correct ? "回答正确" : "回答错误"}</p>
-                          {!lastFeedback.is_correct && <p>正确答案：{lastFeedback.correct_answer}</p>}
+                          <p>{lastFeedback.is_correct ? t("workbench.correct") : t("workbench.incorrect")}</p>
+                          {!lastFeedback.is_correct && (
+                            <p>
+                              {t("workbench.correctAnswer")}
+                              {lastFeedback.correct_answer}
+                            </p>
+                          )}
                           {lastFeedback.explanation && (
                             <p className="wb-explanation">{lastFeedback.explanation}</p>
                           )}
@@ -296,11 +304,11 @@ export function AgentWorkbench({
                         <div className="wb-next-row">
                           {showFinish ? (
                             <button type="button" className="btn-primary" onClick={() => void finishPaper()}>
-                              完成试卷
+                              {t("workbench.finishPaper")}
                             </button>
                           ) : (
                             <button type="button" className="btn-primary" onClick={goNext}>
-                              下一题
+                              {t("workbench.nextQuestion")}
                             </button>
                           )}
                         </div>
@@ -311,18 +319,16 @@ export function AgentWorkbench({
               )}
             </>
           ) : assembling ? (
-            <p className="muted wb-assembling-hint">
-              组卷进行中，工作流日志与拓扑仅显示本次会话。完整 AI 组卷约 2–8 分钟；首卷冷启动通常更快。
-            </p>
+            <p className="muted wb-assembling-hint">{t("workbench.assemblingHint")}</p>
           ) : paper ? (
-            <p className="muted">试卷已创建，正在加载题目…请点「刷新」</p>
+            <p className="muted">{t("workbench.loadingQuestions")}</p>
           ) : (
-            <p className="muted">点击「获取第一份试卷」开始组卷</p>
+            <p className="muted">{t("workbench.startHint")}</p>
           )}
         </main>
 
         <aside className="wb-col wb-workflow panel-card">
-          <h3>模块输出</h3>
+          <h3>{t("workbench.moduleOutput")}</h3>
           <PaperModuleInspector
             moduleId={selectedPaperModule}
             traces={traces}
@@ -336,10 +342,10 @@ export function AgentWorkbench({
               ...paperWorkflowEvents,
             ]}
           />
-          <h3 className="wb-wf-title">工作流日志</h3>
+          <h3 className="wb-wf-title">{t("workbench.workflowLog")}</h3>
           <ul className="workflow-feed">
             {mergedLogs.length === 0 ? (
-              <li className="muted">等待出题 / 记忆 / 调整日志…</li>
+              <li className="muted">{t("workbench.waitingLogs")}</li>
             ) : (
               mergedLogs.map((log, i) => (
                 <li key={`${log.ts}-${i}`} className={`wf-${log.category}`}>
