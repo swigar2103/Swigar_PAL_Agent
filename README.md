@@ -367,3 +367,15 @@ python scripts/demo_loop.py
 ```
 
 模拟：错题事件 → 记忆写入 → Agent 调度 → 输出 `LearningDecision`。
+
+## Git / GitHub Desktop
+
+**请用本目录作为仓库根目录：** `d:\swigar_agent`（不要打开子文件夹 `Swigar_PAL_Agent`）。
+
+历史上若在项目内克隆过 `Swigar_PAL_Agent` 子目录，它会与父目录共用远程 `swigar2103/Swigar_PAL_Agent`，但本地只停留在「仅 README」的旧提交，GitHub Desktop 会显示 **1↑ 2↓**；在该子目录 **Force push** 会用空壳历史覆盖云端，导致 GitHub 上代码消失。
+
+正确做法：
+
+1. GitHub Desktop → **File → Add local repository** → 选择 `d:\swigar_agent`
+2. 同步时优先 **Pull**，再 **Push**；仅在确认要以本地为准时才 Force push
+3. 勿在仅含 README 的嵌套克隆目录里操作同一远程
